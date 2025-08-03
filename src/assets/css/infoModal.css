@@ -1,53 +1,78 @@
 .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-  }
-  
-  .modal-content {
-    background-color: #fff;
-    padding: 2rem;
-    border-radius: 12px;
-    max-width: 600px;
-    width: 90%;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-    overflow-y: auto;
-    max-height: 80vh;
-  }
-  
-  .modal-content h2 {
-    margin-top: 0;
-  }
-  
-  .modal-content ul {
-    padding-left: 1.2rem;
-  }
-  
-  .modal-content .links li {
-    margin: 0.5rem 0;
-  }
-  
-  .modal-content a {
-    color: #0077cc;
-    text-decoration: none;
-  }
-  
-  .modal-content a:hover {
-    text-decoration: underline;
-  }
-  
-  .close-btn {
-    margin-top: 1rem;
-    padding: 0.5rem 1rem;
-    font-weight: bold;
-    background-color: #0077cc;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-content {
+  position: relative;
+  background-color: white;
+  padding: 2.2rem 2.4rem;
+  max-width: 600px;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  font-family: 'Segoe UI', sans-serif;
+  line-height: 1.5;
+  color: #1e1e1e;
+}
+
+.close-icon {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: #1e1e1e;
+}
+
+.modal-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #0c2f87;
+  margin-bottom: 1rem;
+}
+
+.modal-paragraph {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.modal-list {
+  list-style-type: none;
+  padding-left: 0;
+  margin-bottom: 1rem;
+}
+
+.modal-list li {
+  margin-bottom: 0.6rem;
+}
+
+.modal-subtitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 1.2rem;
+}
+
+.modal-links {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.modal-links a {
+  color: #0c2f87;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.modal-links a:hover {
+  text-decoration: underline;
+}
