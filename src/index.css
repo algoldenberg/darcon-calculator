@@ -58,3 +58,20 @@ html, body {
 .footer a:hover {
   text-decoration: underline;
 }
+
+.external-projects {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+.project-title {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.external-projects a {
+  color: #0077cc;
+  text-decoration: underline;
+}

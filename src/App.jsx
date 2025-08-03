@@ -18,12 +18,33 @@ function App() {
           <button className="info-button" onClick={() => setModalOpen(true)}>
             Что такое даркон?
           </button>
+
+          <div className="external-projects">
+            <span className="project-title">Другие наши проекты:</span>
+            <ul>
+              <li>
+                <a
+                  href="https://nekudot-calculator.netlify.app/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Калькулятор налоговых льгот (некудот зикуй)
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
+
         {isModalOpen && <InfoModal onClose={() => setModalOpen(false)} />}
         <ResultBlock result={calcResult} />
       </main>
+
       <footer className="footer">
-        <a href="https://github.com/alex-goldenberg/darcon-calculator" target="_blank" rel="noreferrer">
+        <a
+          href="https://github.com/alex-goldenberg/darcon-calculator"
+          target="_blank"
+          rel="noreferrer"
+        >
           GitHub проекта
         </a>{' '}
         · MIT License · © 2025 Alex Goldenberg
