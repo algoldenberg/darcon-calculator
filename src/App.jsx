@@ -7,19 +7,20 @@ import { useState } from 'react';
 
 function App() {
   const [isModalOpen, setModalOpen] = useState(false);
+  const [calcResult, setCalcResult] = useState(null);
 
   return (
     <>
       <Header />
       <main className="main-wrapper">
         <div className="card">
-          <FormBlock />
+          <FormBlock onCalculate={setCalcResult} />
           <button className="info-button" onClick={() => setModalOpen(true)}>
             Что такое даркон?
           </button>
         </div>
         {isModalOpen && <InfoModal onClose={() => setModalOpen(false)} />}
-        <ResultBlock />
+        <ResultBlock result={calcResult} />
       </main>
       <footer className="footer">
         <a href="https://github.com/alex-goldenberg/darcon-calculator" target="_blank" rel="noreferrer">

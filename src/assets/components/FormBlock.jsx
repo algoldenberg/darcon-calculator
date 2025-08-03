@@ -1,7 +1,8 @@
 import '../css/formBlock.css';
 import { useState } from 'react';
+import { calculateDarconStatus } from '../../utils/calculateDarconStatus';
 
-function FormBlock() {
+function FormBlock({ onCalculate }) {
   const [aliyahDate, setAliyahDate] = useState('');
   const [trips, setTrips] = useState([{ from: '', to: '' }]);
 
@@ -19,6 +20,13 @@ function FormBlock() {
     const updatedTrips = [...trips];
     updatedTrips.splice(index, 1);
     setTrips(updatedTrips);
+  };
+
+  const handleCalculate = () => {
+    const result = calculateDarconStatus(aliyahDate, trips);
+    if (result) {
+      onCalculate(result);
+    }
   };
 
   return (
@@ -58,10 +66,11 @@ function FormBlock() {
         </button>
       </div>
 
-      <button className="calculate-btn">Рассчитать</button>
+      <button className="calculate-btn" onClick={handleCalculate}>
+        Рассчитать
+      </button>
     </div>
   );
 }
 
 export default FormBlock;
-
