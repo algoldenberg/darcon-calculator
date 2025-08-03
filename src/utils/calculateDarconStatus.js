@@ -9,11 +9,9 @@ export function calculateDarconStatus(aliyahDateString, trips = []) {
   const aliyahDate = dayjs(aliyahDateString);
   const now = dayjs();
 
-  // Общий период с даты алии до сейчас
   const totalDays = now.diff(aliyahDate, 'day');
   const totalMonths = now.diff(aliyahDate, 'month', true);
 
-  // Подсчёт дней за границей
   let abroadDays = 0;
 
   trips.forEach(({ from, to }) => {
@@ -25,13 +23,17 @@ export function calculateDarconStatus(aliyahDateString, trips = []) {
   });
 
   const daysInIsrael = totalDays - abroadDays;
-  const monthsInIsrael = daysInIsrael / 30.44; // средняя длина месяца
+  const monthsInIsrael = daysInIsrael / 30.44;
   const percentageInIsrael = (daysInIsrael / totalDays) * 100;
 
   const eligibleForFive = totalMonths >= 12 && percentageInIsrael >= 60;
   const eligibleForTen = totalMonths >= 60 && monthsInIsrael >= 36;
 
-  // Формулировка результата
+  const monthsUntilFive = Math.max(0, 12 - totalMonths);
+  const monthsUntilTen = Math.max(0, 60 - totalMonths);
+  const fiveYearDate = aliyahDate.add(1, 'year').format('DD.MM.YYYY');
+  const tenYearDate = aliyahDate.add(5, 'year').format('DD.MM.YYYY');
+
   let message = '';
   if (eligibleForTen) {
     message = 'Вы имеете право на 10-летний даркон.';
@@ -44,11 +46,15 @@ export function calculateDarconStatus(aliyahDateString, trips = []) {
   }
 
   return {
-    totalMonthsSinceAliyah: Number(totalMonths.toFixed(2)),
-    monthsInIsrael: Number(monthsInIsrael.toFixed(2)),
-    percentageInIsrael: Number(percentageInIsrael.toFixed(2)),
+    totalMonthsSinceAliyah: Number(totalMonths.toFixed(1)),
+    monthsInIsrael: Number(monthsInIsrael.toFixed(1)),
+    percentageInIsrael: Number(percentageInIsrael.toFixed(1)),
     eligibleForFive,
     eligibleForTen,
+    monthsUntilFive: Number(monthsUntilFive.toFixed(1)),
+    monthsUntilTen: Number(monthsUntilTen.toFixed(1)),
+    fiveYearDate,
+    tenYearDate,
     message
   };
 }

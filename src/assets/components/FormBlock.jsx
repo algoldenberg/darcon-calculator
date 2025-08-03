@@ -76,6 +76,17 @@ function FormBlock({ onCalculate }) {
       }));
 
     const result = calculateDarconStatus(aliyah, normalizedTrips);
+
+    // Расчёт оставшегося времени для даркона
+    const totalMonths = (Date.now() - aliyahDate.getTime()) / (1000 * 60 * 60 * 24 * 30.44);
+    const israelMonths = result.israelMonths;
+
+    const monthsTo5 = Math.max(0, 12 - israelMonths);
+    const monthsTo10 = Math.max(0, 36 - israelMonths);
+
+    result.remainingTo5 = monthsTo5 > 0 ? monthsTo5.toFixed(1) : null;
+    result.remainingTo10 = monthsTo10 > 0 ? monthsTo10.toFixed(1) : null;
+
     if (result) onCalculate(result);
   };
 
