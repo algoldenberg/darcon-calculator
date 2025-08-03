@@ -41,7 +41,7 @@ function App() {
 
       <footer className="footer">
         <a
-          href="https://github.com/alex-goldenberg/darcon-calculator"
+          href="hhttps://github.com/algoldenberg/darcon-calculator"
           target="_blank"
           rel="noreferrer"
         >

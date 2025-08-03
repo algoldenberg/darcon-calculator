@@ -15,14 +15,30 @@ function ResultBlock({ result }) {
         {result.percentageInIsrael.toFixed(1)}%)
       </p>
 
+      {result.remainingAbroadMonthsForFive !== null && (
+        <p>
+          <strong>Максимально можно провести за границей (для 5-летнего даркона):</strong>{' '}
+          {result.remainingAbroadMonthsForFive.toFixed(1)} месяцев
+        </p>
+      )}
+
+      {result.remainingAbroadMonthsForTen !== null && (
+        <p>
+          <strong>Максимально можно провести за границей ещё (для 10-летнего даркона):</strong>{' '}
+          {result.remainingAbroadMonthsForTen.toFixed(1)} месяцев
+        </p>
+      )}
+
       {!result.eligibleForFive && (
         <p>
-          <strong>Осталось до 5-летнего даркона:</strong> {result.monthsUntilFive.toFixed(1)} месяцев (ориентировочно с {result.fiveYearDate})
+          <strong>Осталось до 5-летнего даркона:</strong>{' '}
+          {result.monthsUntilFive.toFixed(1)} месяцев (ориентировочно с {result.fiveYearDate})
         </p>
       )}
       {!result.eligibleForTen && (
         <p>
-          <strong>Осталось до 10-летнего даркона:</strong> {result.monthsUntilTen.toFixed(1)} месяцев (ориентировочно с {result.tenYearDate})
+          <strong>Осталось до 10-летнего даркона:</strong>{' '}
+          {result.monthsUntilTen.toFixed(1)} месяцев (ориентировочно с {result.tenYearDate})
         </p>
       )}
 

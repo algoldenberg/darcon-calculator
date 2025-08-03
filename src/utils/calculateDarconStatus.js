@@ -34,11 +34,21 @@ export function calculateDarconStatus(aliyahDateString, trips = []) {
   const fiveYearDate = aliyahDate.add(1, 'year').format('DD.MM.YYYY');
   const tenYearDate = aliyahDate.add(5, 'year').format('DD.MM.YYYY');
 
+  const maxAbroadDays5 = totalDays * 0.4;
+  const remainingAbroadDaysForFive = Math.max(0, maxAbroadDays5 - abroadDays);
+  const remainingAbroadMonthsForFive = Number((remainingAbroadDaysForFive / 30.44).toFixed(1));
+
+  const fixedPeriodDaysForTen = 1825; // 5 лет
+  const maxAbroadDays10 = fixedPeriodDaysForTen * 0.4; // 730 дней
+  const remainingAbroadDaysForTen = Math.max(0, maxAbroadDays10 - abroadDays);
+  const remainingAbroadMonthsForTen = Number((remainingAbroadDaysForTen / 30.44).toFixed(1));
+
   let message = '';
   if (eligibleForTen) {
     message = 'Вы имеете право на 10-летний даркон.';
   } else if (eligibleForFive) {
     message = 'Вы имеете право на 5-летний даркон.';
+    message += ` Вы можете провести за границей ещё до ${remainingAbroadMonthsForTen} месяцев, чтобы сохранить право на 10-летний даркон.`;
   } else if (totalMonths < 12) {
     message = 'С момента репатриации прошло меньше года. Пока можно получить только Teudat Ma’avar.';
   } else {
@@ -55,6 +65,8 @@ export function calculateDarconStatus(aliyahDateString, trips = []) {
     monthsUntilTen: Number(monthsUntilTen.toFixed(1)),
     fiveYearDate,
     tenYearDate,
+    remainingAbroadMonthsForFive,
+    remainingAbroadMonthsForTen,
     message
   };
 }
