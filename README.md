@@ -1,12 +1,48 @@
-# React + Vite
+🇮🇱 Калькулятор Даркона
+Интерактивный калькулятор для новых репатриантов в Израиле. Показывает, когда и при каких условиях можно получить или продлить Даркон — заграничный паспорт гражданина Израиля.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+🛠️ Стек
+React + Vite — быстрый и современный фреймворк
 
-Currently, two official plugins are available:
+CSS-модули — изоляция стилей по компонентам
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+i18next — мультиязычная поддержка (в планах)
 
-## Expanding the ESLint configuration
+react-icons — иконки с SVG-поддержкой
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Модальное окно — пояснение условий получения Даркона
+
+📦 Установка
+
+npm install
+npm run dev
+
+📁 Структура проекта
+
+src/
+├── assets/
+│   ├── components/     # UI-компоненты (формы, модалки и т.п.)
+│   ├── css/            # CSS-модули
+│   └── images/         # Графика (если потребуется)
+├── App.jsx             # Главный компонент
+├── main.jsx            # Точка входа
+└── index.css           # Общие стили
+
+📌 Функции
+Подсчёт права на 5-летний и 10-летний Даркон
+
+Пояснения на русском языке
+
+Модальные окна с подробностями
+
+Удобный интерфейс, адаптированный под мобильные устройства
+
+🚧 В разработке
+Поддержка иврита и английского
+
+Сохранение введённых данных
+
+Интеграция с калькулятором налоговых льгот
+
+📃 Лицензия
+MIT
