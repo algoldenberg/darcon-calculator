@@ -35,7 +35,7 @@ function App() {
           </div>
         </div>
 
-        {isModalOpen && <InfoModal onClose={() => setModalOpen(false)} />}
+        <InfoModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} />
         <ResultBlock result={calcResult} />
       </main>
 
