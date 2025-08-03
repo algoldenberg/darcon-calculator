@@ -1,0 +1,62 @@
+.form-block {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .form-block label {
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+  }
+  
+  .form-block input[type="date"] {
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    width: 100%;
+    max-width: 260px;
+  }
+  
+  .trips-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .trip-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .dash {
+    font-weight: bold;
+  }
+  
+  .remove-btn {
+    background-color: transparent;
+    border: none;
+    color: #c00;
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+  
+  .add-btn,
+  .calculate-btn {
+    margin-top: 1rem;
+    padding: 0.6rem 1rem;
+    background-color: #0077cc;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .add-btn:hover,
+  .calculate-btn:hover {
+    background-color: #005fa3;
+  }
+  
