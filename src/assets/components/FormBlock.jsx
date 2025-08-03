@@ -1,12 +1,13 @@
 import '../css/formBlock.css';
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
-import { parse, isValid } from 'date-fns';
+import { parse, isValid, isAfter, isBefore } from 'date-fns';
 import { calculateDarconStatus } from '../../utils/calculateDarconStatus';
 
 function FormBlock({ onCalculate }) {
   const [aliyahDate, setAliyahDate] = useState(null);
   const [trips, setTrips] = useState([{ from: null, to: null }]);
+  const [errors, setErrors] = useState([]);
 
   const handleTripChange = (index, field, value) => {
     const updatedTrips = [...trips];
@@ -24,16 +25,6 @@ function FormBlock({ onCalculate }) {
     setTrips(updatedTrips);
   };
 
-  const handleCalculate = () => {
-    const aliyah = aliyahDate ? aliyahDate.toISOString().split('T')[0] : '';
-    const normalizedTrips = trips.map((trip) => ({
-      from: trip.from ? trip.from.toISOString().split('T')[0] : '',
-      to: trip.to ? trip.to.toISOString().split('T')[0] : '',
-    }));
-    const result = calculateDarconStatus(aliyah, normalizedTrips);
-    if (result) onCalculate(result);
-  };
-
   const handleRawInput = (e, setter) => {
     const raw = e.target.value.replace(/[^\d]/g, '');
     if (raw.length === 8) {
@@ -44,8 +35,62 @@ function FormBlock({ onCalculate }) {
     }
   };
 
+  const handleCalculate = () => {
+    const today = new Date();
+    const newErrors = [];
+
+    if (!aliyahDate) {
+      newErrors.push('Укажите дату репатриации.');
+    } else if (isAfter(aliyahDate, today)) {
+      newErrors.push('Дата репатриации не может быть в будущем.');
+    }
+
+    trips.forEach((trip, i) => {
+      if (trip.from && trip.to) {
+        if (isAfter(trip.from, trip.to)) {
+          newErrors.push(`В выезде #${i + 1} дата возвращения раньше даты выезда.`);
+        }
+        if (isAfter(trip.from, today) || isAfter(trip.to, today)) {
+          newErrors.push(`В выезде #${i + 1} указаны будущие даты.`);
+        }
+        if (aliyahDate && isBefore(trip.from, aliyahDate)) {
+          newErrors.push(`В выезде #${i + 1} дата выезда раньше даты репатриации.`);
+        }
+      } else if (trip.from || trip.to) {
+        newErrors.push(`Выезд #${i + 1} заполнен не полностью.`);
+      }
+    });
+
+    if (newErrors.length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors([]);
+    const aliyah = aliyahDate.toISOString().split('T')[0];
+    const normalizedTrips = trips
+      .filter((trip) => trip.from && trip.to)
+      .map((trip) => ({
+        from: trip.from.toISOString().split('T')[0],
+        to: trip.to.toISOString().split('T')[0],
+      }));
+
+    const result = calculateDarconStatus(aliyah, normalizedTrips);
+    if (result) onCalculate(result);
+  };
+
   return (
     <div className="form-block">
+      {errors.length > 0 && (
+        <div className="error-block">
+          <ul>
+            {errors.map((err, i) => (
+              <li key={i}>{err}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       <label>Дата репатриации:</label>
       <DatePicker
         selected={aliyahDate}
