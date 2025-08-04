@@ -86,4 +86,70 @@
     padding-left: 1.2rem;
   }
   
+  .form-section {
+    margin-bottom: 1.5rem;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-weight: 600;
+  }
+  
+  input[type='date'],
+  input[type='text'] {
+    padding: 0.4rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    width: 100%;
+    max-width: 250px;
+  }
+  
+  .checkbox-wrapper {
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .checkbox-wrapper input[type='checkbox'] {
+    transform: scale(1.2);
+  }
+  
+  .trip-pair {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .add-trip-button {
+    background-color: transparent;
+    color: #0047ab;
+    border: none;
+    padding: 0;
+    margin-top: 0.5rem;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .add-trip-button:hover {
+    text-decoration: underline;
+  }
+  
+
+  .form-wrapper {
+    width: 100%;
+  }
+  
+  .same-size-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .same-size-form .form-section {
+    margin-bottom: 1.5rem;
+  }
   

@@ -1,60 +1,58 @@
 import '../css/formBlock.css';
 import { useState } from 'react';
-import DatePicker from 'react-datepicker';
 import { parse, isValid, isAfter, isBefore } from 'date-fns';
 import { calculateDarconStatus } from '../../utils/calculateDarconStatus';
 
 function FormBlock({ onCalculate }) {
-  const [aliyahDate, setAliyahDate] = useState(null);
-  const [trips, setTrips] = useState([{ from: null, to: null }]);
+  const [aliyahDate, setAliyahDate] = useState('');
+  const [trips, setTrips] = useState([{ from: '', to: '' }]);
   const [errors, setErrors] = useState([]);
 
+  const formatInputDate = (value) => {
+    const raw = value.replace(/\D/g, '').slice(0, 8);
+    if (raw.length >= 5) return `${raw.slice(0, 2)}.${raw.slice(2, 4)}.${raw.slice(4, 8)}`;
+    if (raw.length >= 3) return `${raw.slice(0, 2)}.${raw.slice(2, 4)}`;
+    return raw;
+  };
+
+  const parseDate = (str) => {
+    const parsed = parse(str, 'dd.MM.yyyy', new Date());
+    return isValid(parsed) ? parsed : null;
+  };
+
   const handleTripChange = (index, field, value) => {
-    const updatedTrips = [...trips];
-    updatedTrips[index][field] = value;
-    setTrips(updatedTrips);
+    const updated = [...trips];
+    updated[index][field] = formatInputDate(value);
+    setTrips(updated);
   };
 
-  const addTrip = () => {
-    setTrips([...trips, { from: null, to: null }]);
-  };
-
+  const addTrip = () => setTrips([...trips, { from: '', to: '' }]);
   const removeTrip = (index) => {
-    const updatedTrips = [...trips];
-    updatedTrips.splice(index, 1);
-    setTrips(updatedTrips);
-  };
-
-  const handleRawInput = (e, setter) => {
-    const raw = e.target.value.replace(/[^\d]/g, '');
-    if (raw.length === 8) {
-      const parsed = parse(raw, 'ddMMyyyy', new Date());
-      if (isValid(parsed)) {
-        setter(parsed);
-      }
-    }
+    const updated = [...trips];
+    updated.splice(index, 1);
+    setTrips(updated);
   };
 
   const handleCalculate = () => {
     const today = new Date();
     const newErrors = [];
 
-    if (!aliyahDate) {
-      newErrors.push('Укажите дату репатриации.');
-    } else if (isAfter(aliyahDate, today)) {
-      newErrors.push('Дата репатриации не может быть в будущем.');
-    }
+    const parsedAliyah = parseDate(aliyahDate);
+    if (!parsedAliyah) newErrors.push('Укажите корректную дату репатриации.');
+    else if (isAfter(parsedAliyah, today)) newErrors.push('Дата репатриации не может быть в будущем.');
 
+    const parsedTrips = [];
     trips.forEach((trip, i) => {
+      const from = parseDate(trip.from);
+      const to = parseDate(trip.to);
+
       if (trip.from && trip.to) {
-        if (isAfter(trip.from, trip.to)) {
-          newErrors.push(`В выезде #${i + 1} дата возвращения раньше даты выезда.`);
-        }
-        if (isAfter(trip.from, today) || isAfter(trip.to, today)) {
-          newErrors.push(`В выезде #${i + 1} указаны будущие даты.`);
-        }
-        if (aliyahDate && isBefore(trip.from, aliyahDate)) {
-          newErrors.push(`В выезде #${i + 1} дата выезда раньше даты репатриации.`);
+        if (!from || !to) newErrors.push(`Выезд #${i + 1} содержит некорректную дату.`);
+        else {
+          if (isAfter(from, to)) newErrors.push(`В выезде #${i + 1} дата возвращения раньше даты выезда.`);
+          if (isAfter(from, today) || isAfter(to, today)) newErrors.push(`В выезде #${i + 1} указаны будущие даты.`);
+          if (parsedAliyah && isBefore(from, parsedAliyah)) newErrors.push(`В выезде #${i + 1} дата выезда раньше репатриации.`);
+          parsedTrips.push({ from, to });
         }
       } else if (trip.from || trip.to) {
         newErrors.push(`Выезд #${i + 1} заполнен не полностью.`);
@@ -67,20 +65,15 @@ function FormBlock({ onCalculate }) {
     }
 
     setErrors([]);
-    const aliyah = aliyahDate.toISOString().split('T')[0];
-    const normalizedTrips = trips
-      .filter((trip) => trip.from && trip.to)
-      .map((trip) => ({
-        from: trip.from.toISOString().split('T')[0],
-        to: trip.to.toISOString().split('T')[0],
-      }));
+    const aliyah = parsedAliyah.toISOString().split('T')[0];
+    const normalizedTrips = parsedTrips.map((trip) => ({
+      from: trip.from.toISOString().split('T')[0],
+      to: trip.to.toISOString().split('T')[0],
+    }));
 
     const result = calculateDarconStatus(aliyah, normalizedTrips);
 
-    // Расчёт оставшегося времени для даркона
-    const totalMonths = (Date.now() - aliyahDate.getTime()) / (1000 * 60 * 60 * 24 * 30.44);
     const israelMonths = result.israelMonths;
-
     const monthsTo5 = Math.max(0, 12 - israelMonths);
     const monthsTo10 = Math.max(0, 36 - israelMonths);
 
@@ -94,21 +87,17 @@ function FormBlock({ onCalculate }) {
     <div className="form-block">
       {errors.length > 0 && (
         <div className="error-block">
-          <ul>
-            {errors.map((err, i) => (
-              <li key={i}>{err}</li>
-            ))}
-          </ul>
+          <ul>{errors.map((err, i) => <li key={i}>{err}</li>)}</ul>
         </div>
       )}
 
       <label>Дата репатриации:</label>
-      <DatePicker
-        selected={aliyahDate}
-        onChange={(date) => setAliyahDate(date)}
-        onChangeRaw={(e) => handleRawInput(e, setAliyahDate)}
-        dateFormat="dd.MM.yyyy"
-        placeholderText="дд.мм.гггг"
+      <input
+        type="text"
+        inputMode="numeric"
+        value={aliyahDate}
+        onChange={(e) => setAliyahDate(formatInputDate(e.target.value))}
+        placeholder="дд.мм.гггг"
         className="datepicker"
       />
 
@@ -116,26 +105,24 @@ function FormBlock({ onCalculate }) {
         <label>Выезды из Израиля:</label>
         {trips.map((trip, index) => (
           <div className="trip-row" key={index}>
-            <DatePicker
-              selected={trip.from}
-              onChange={(date) => handleTripChange(index, 'from', date)}
-              onChangeRaw={(e) => handleRawInput(e, (val) => handleTripChange(index, 'from', val))}
-              dateFormat="dd.MM.yyyy"
-              placeholderText="Дата выезда"
+            <input
+              type="text"
+              inputMode="numeric"
+              value={trip.from}
+              onChange={(e) => handleTripChange(index, 'from', e.target.value)}
+              placeholder="Дата выезда"
               className="datepicker"
             />
             <span className="dash">—</span>
-            <DatePicker
-              selected={trip.to}
-              onChange={(date) => handleTripChange(index, 'to', date)}
-              onChangeRaw={(e) => handleRawInput(e, (val) => handleTripChange(index, 'to', val))}
-              dateFormat="dd.MM.yyyy"
-              placeholderText="Дата возвращения"
+            <input
+              type="text"
+              inputMode="numeric"
+              value={trip.to}
+              onChange={(e) => handleTripChange(index, 'to', e.target.value)}
+              placeholder="Дата возвращения"
               className="datepicker"
             />
-            <button type="button" className="remove-btn" onClick={() => removeTrip(index)}>
-              ✕
-            </button>
+            <button type="button" className="remove-btn" onClick={() => removeTrip(index)}>✕</button>
           </div>
         ))}
         <button type="button" className="add-btn" onClick={addTrip}>
